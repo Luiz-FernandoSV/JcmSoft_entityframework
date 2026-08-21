@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="JcmSoft.Console/JcmSoft.Console.csproj" />
+  <Project Path="JcmSoft.Domain/JcmSoft.Domain.csproj" />
+  <Project Path="JcmSoft.EFCore/JcmSoft.EFCore.csproj" />
+</Solution>
