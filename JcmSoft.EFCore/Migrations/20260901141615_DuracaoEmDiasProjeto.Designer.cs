@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JcmSoft.EFCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260827185225_AddConfigurations")]
-    partial class AddConfigurations
+    [Migration("20260901141615_DuracaoEmDiasProjeto")]
+    partial class DuracaoEmDiasProjeto
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,13 @@ namespace JcmSoft.EFCore.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.HasSequence<int>("NumeroOSSequence")
+                .StartsAt(2001L)
+                .IncrementsBy(10)
+                .HasMin(2001L)
+                .HasMax(999999L)
+                .IsCyclic();
 
             modelBuilder.Entity("JcmSoft.Domain.Entities.Cliente", b =>
                 {
@@ -453,6 +460,41 @@ namespace JcmSoft.EFCore.Migrations
                             Nome = "Gustavo Freitas",
                             Salario = 4300.00m
                         });
+                });
+
+            modelBuilder.Entity("JcmSoft.Domain.Entities.FuncionarioDepartamentoView", b =>
+                {
+                    b.Property<string>("Cargo")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateOnly>("DataContratacao")
+                        .HasColumnType("date");
+
+                    b.Property<int>("DepartamentoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DescricaoDepartamento")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int>("FuncionarioId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NomeDepartamento")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NomeFuncionario")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("Salario")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("view_FuncionariosDepartamentos", (string)null);
                 });
 
             modelBuilder.Entity("JcmSoft.Domain.Entities.FuncionarioDetalhe", b =>
@@ -988,10 +1030,20 @@ namespace JcmSoft.EFCore.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int>("DuracaoEmDias")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("int")
+                        .HasComputedColumnSql("DATEDIFF(day,DataInico,DataFim)", true);
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("NumeroOrdemServico")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValueSql("NEXT VALUE FOR NumeroOSSequence");
 
                     b.Property<decimal>("Orcamento")
                         .HasPrecision(20, 2)
@@ -1015,7 +1067,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Sistema de vendas",
+                            DuracaoEmDias = 0,
                             Nome = "Sistema Gulosos",
+                            NumeroOrdemServico = 0,
                             Orcamento = 15000.00m,
                             Status = 10
                         },
@@ -1027,7 +1081,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Portal corporativo",
+                            DuracaoEmDias = 0,
                             Nome = "Portal TechNova",
+                            NumeroOrdemServico = 0,
                             Orcamento = 28000.00m,
                             Status = 10
                         },
@@ -1039,7 +1095,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Sistema de estoque",
+                            DuracaoEmDias = 0,
                             Nome = "Sistema Mercado",
+                            NumeroOrdemServico = 0,
                             Orcamento = 22000.00m,
                             Status = 10
                         },
@@ -1051,7 +1109,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Aplicativo hospitalar",
+                            DuracaoEmDias = 0,
                             Nome = "App Hospital Vida",
+                            NumeroOrdemServico = 0,
                             Orcamento = 35000.00m,
                             Status = 10
                         },
@@ -1063,7 +1123,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Controle de entregas",
+                            DuracaoEmDias = 0,
                             Nome = "Sistema de Entregas",
+                            NumeroOrdemServico = 0,
                             Orcamento = 18000.00m,
                             Status = 10
                         },
@@ -1075,7 +1137,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Portal acadêmico",
+                            DuracaoEmDias = 0,
                             Nome = "Portal Escola Futuro",
+                            NumeroOrdemServico = 0,
                             Orcamento = 25000.00m,
                             Status = 10
                         },
@@ -1087,7 +1151,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Aplicativo de pedidos",
+                            DuracaoEmDias = 0,
                             Nome = "App Restaurante",
+                            NumeroOrdemServico = 0,
                             Orcamento = 12000.00m,
                             Status = 10
                         },
@@ -1099,7 +1165,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Sistema de obras",
+                            DuracaoEmDias = 0,
                             Nome = "Gestao de Obras",
+                            NumeroOrdemServico = 0,
                             Orcamento = 32000.00m,
                             Status = 10
                         },
@@ -1111,7 +1179,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Aplicativo fitness",
+                            DuracaoEmDias = 0,
                             Nome = "App Academia",
+                            NumeroOrdemServico = 0,
                             Orcamento = 14000.00m,
                             Status = 10
                         },
@@ -1123,7 +1193,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Sistema bancário",
+                            DuracaoEmDias = 0,
                             Nome = "Internet Banking",
+                            NumeroOrdemServico = 0,
                             Orcamento = 50000.00m,
                             Status = 10
                         },
@@ -1135,7 +1207,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 5, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Sistema de consultas",
+                            DuracaoEmDias = 0,
                             Nome = "Agenda Clinica",
+                            NumeroOrdemServico = 0,
                             Orcamento = 16000.00m,
                             Status = 10
                         },
@@ -1147,7 +1221,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Loja virtual",
+                            DuracaoEmDias = 0,
                             Nome = "E-commerce Livraria",
+                            NumeroOrdemServico = 0,
                             Orcamento = 27000.00m,
                             Status = 10
                         },
@@ -1159,7 +1235,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 6, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Sistema pet shop",
+                            DuracaoEmDias = 0,
                             Nome = "Pet Feliz Online",
+                            NumeroOrdemServico = 0,
                             Orcamento = 13000.00m,
                             Status = 10
                         },
@@ -1171,7 +1249,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Agendamento oficina",
+                            DuracaoEmDias = 0,
                             Nome = "Auto Center App",
+                            NumeroOrdemServico = 0,
                             Orcamento = 19000.00m,
                             Status = 10
                         },
@@ -1183,7 +1263,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Sistema hoteleiro",
+                            DuracaoEmDias = 0,
                             Nome = "Hotel Central",
+                            NumeroOrdemServico = 0,
                             Orcamento = 24000.00m,
                             Status = 10
                         },
@@ -1195,7 +1277,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "E-commerce farmacia",
+                            DuracaoEmDias = 0,
                             Nome = "Farmacia Online",
+                            NumeroOrdemServico = 0,
                             Orcamento = 21000.00m,
                             Status = 10
                         },
@@ -1207,7 +1291,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Sistema comercial",
+                            DuracaoEmDias = 0,
                             Nome = "Comercial Andrade",
+                            NumeroOrdemServico = 0,
                             Orcamento = 17000.00m,
                             Status = 10
                         },
@@ -1219,7 +1305,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Portal educacional",
+                            DuracaoEmDias = 0,
                             Nome = "Portal Alpha",
+                            NumeroOrdemServico = 0,
                             Orcamento = 30000.00m,
                             Status = 10
                         },
@@ -1231,7 +1319,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "ERP industrial",
+                            DuracaoEmDias = 0,
                             Nome = "Metal Forte ERP",
+                            NumeroOrdemServico = 0,
                             Orcamento = 45000.00m,
                             Status = 10
                         },
@@ -1243,7 +1333,9 @@ namespace JcmSoft.EFCore.Migrations
                             DataFim = new DateTime(2026, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataInico = new DateTime(2026, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Descricao = "Sistema logístico",
+                            DuracaoEmDias = 0,
                             Nome = "Logistica Express",
+                            NumeroOrdemServico = 0,
                             Orcamento = 26000.00m,
                             Status = 10
                         });
@@ -1254,7 +1346,7 @@ namespace JcmSoft.EFCore.Migrations
                     b.HasOne("JcmSoft.Domain.Entities.Departamento", "Departamento")
                         .WithMany("Funcionarios")
                         .HasForeignKey("DepartamentoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Departamento");

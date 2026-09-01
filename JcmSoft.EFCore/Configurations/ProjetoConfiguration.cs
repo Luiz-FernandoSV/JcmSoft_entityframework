@@ -18,6 +18,7 @@ namespace JcmSoft.EFCore.Configurations
             entity.Property(e => e.Nome).HasMaxLength(100).IsRequired();
             entity.Property(e => e.Descricao).HasMaxLength(200).IsRequired();
             entity.Property(e => e.Orcamento).HasPrecision(20, 2);
+            entity.Property(e => e.DuracaoEmDias).HasComputedColumnSql("DATEDIFF(day,DataInico,DataFim)", stored: true);
 
             entity.HasData(
                 new Projeto { ProjetoId = 1, ClienteId = 1, Nome = "Sistema Gulosos", Orcamento = 15000.00m, Descricao = "Sistema de vendas", DataInico = DateTime.Parse("01/01/2026"), DataAtualizacao = DateTime.Parse("20/08/2026"), DataFim = DateTime.Parse("30/09/2026"), Status = StatusProjeto.Iniciado },

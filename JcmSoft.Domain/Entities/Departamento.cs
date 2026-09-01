@@ -14,6 +14,8 @@ namespace JcmSoft.Domain.Entities
         public string? Descricao { get; set; }
         // propriedade de navegação de coleção
         public ICollection<Funcionario> Funcionarios { get; set; }
+
+        public byte[] RowVersion { get; set; }
         public Departamento()
         {
             Funcionarios = new List<Funcionario>();

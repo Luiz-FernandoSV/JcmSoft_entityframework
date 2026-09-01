@@ -14,6 +14,17 @@ namespace JcmSoft.EFCore.Configurations
     {
         public void Configure(EntityTypeBuilder<Funcionario> entity)
         {
+            entity.HasOne(f => f.Departamento)
+                  .WithMany(d => d.Funcionarios)
+                  .HasForeignKey(f => f.DepartamentoId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(f => f.FuncionarioDetalhe)
+                  .WithOne(fd => fd.Funcionario)
+                  .HasForeignKey<FuncionarioDetalhe>(fd => fd.FuncionarioId)
+                  .IsRequired()
+                  .OnDelete(DeleteBehavior.Cascade);
+
             entity.Property(f => f.Nome).IsRequired().HasMaxLength(100);
             entity.Property(f => f.Cargo).IsRequired().HasMaxLength(100);
             entity.Property(f => f.Salario).IsRequired().HasPrecision(14, 2);

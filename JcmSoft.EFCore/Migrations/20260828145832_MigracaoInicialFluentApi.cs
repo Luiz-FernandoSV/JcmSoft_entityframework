@@ -8,11 +8,142 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JcmSoft.EFCore.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedDataMigration : Migration
+    public partial class MigracaoInicialFluentApi : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Clientes",
+                columns: table => new
+                {
+                    ClienteId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Telefone = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clientes", x => x.ClienteId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Departamentos",
+                columns: table => new
+                {
+                    DepartamentoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Descricao = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departamentos", x => x.DepartamentoId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Projetos",
+                columns: table => new
+                {
+                    ProjetoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Descricao = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Orcamento = table.Column<decimal>(type: "decimal(20,2)", precision: 20, scale: 2, nullable: false),
+                    DataInico = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataFim = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    ClienteId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Projetos", x => x.ProjetoId);
+                    table.ForeignKey(
+                        name: "FK_Projetos_Clientes_ClienteId",
+                        column: x => x.ClienteId,
+                        principalTable: "Clientes",
+                        principalColumn: "ClienteId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Funcionarios",
+                columns: table => new
+                {
+                    FuncionarioId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Cargo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Salario = table.Column<decimal>(type: "decimal(10,2)", precision: 14, scale: 2, nullable: false),
+                    DataContratacao = table.Column<DateOnly>(type: "date", nullable: false),
+                    DepartamentoId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Funcionarios", x => x.FuncionarioId);
+                    table.ForeignKey(
+                        name: "FK_Funcionarios_Departamentos_DepartamentoId",
+                        column: x => x.DepartamentoId,
+                        principalTable: "Departamentos",
+                        principalColumn: "DepartamentoId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FuncionarioDetalhes",
+                columns: table => new
+                {
+                    FuncionarioDetalheId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EnderecoResidencial = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Celular = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Genero = table.Column<int>(type: "int", nullable: false),
+                    Foto = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    EstadoCivil = table.Column<int>(type: "int", nullable: false),
+                    CPF = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Nacionalidade = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Escolaridade = table.Column<int>(type: "int", nullable: false),
+                    FuncionarioId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FuncionarioDetalhes", x => x.FuncionarioDetalheId);
+                    table.ForeignKey(
+                        name: "FK_FuncionarioDetalhes_Funcionarios_FuncionarioId",
+                        column: x => x.FuncionarioId,
+                        principalTable: "Funcionarios",
+                        principalColumn: "FuncionarioId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FuncionariosProjetos",
+                columns: table => new
+                {
+                    FuncionarioId = table.Column<int>(type: "int", nullable: false),
+                    ProjetoId = table.Column<int>(type: "int", nullable: false),
+                    HorasTrabalhadas = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FuncionariosProjetos", x => new { x.FuncionarioId, x.ProjetoId });
+                    table.ForeignKey(
+                        name: "FK_FuncionariosProjetos_Funcionarios_FuncionarioId",
+                        column: x => x.FuncionarioId,
+                        principalTable: "Funcionarios",
+                        principalColumn: "FuncionarioId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FuncionariosProjetos_Projetos_ProjetoId",
+                        column: x => x.ProjetoId,
+                        principalTable: "Projetos",
+                        principalColumn: "ProjetoId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Clientes",
                 columns: new[] { "ClienteId", "Email", "Nome", "Telefone" },
@@ -130,425 +261,81 @@ namespace JcmSoft.EFCore.Migrations
                     { 19, "50231231249", "11987654339", new DateTime(1997, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), "Rua Santana, 820", 3, 0, "larissa.jpg", 19, 1, "Brasileira" },
                     { 20, "50231231250", "11987654340", new DateTime(1994, 11, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Rua Moema, 450", 3, 1, "gustavo.jpg", 20, 0, "Brasileiro" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "FuncionariosProjetos",
+                columns: new[] { "FuncionarioId", "ProjetoId", "HorasTrabalhadas" },
+                values: new object[,]
+                {
+                    { 1, 1, 80 },
+                    { 1, 19, 100 },
+                    { 2, 1, 60 },
+                    { 3, 2, 90 },
+                    { 3, 20, 55 },
+                    { 4, 2, 70 },
+                    { 5, 3, 100 },
+                    { 5, 4, 30 },
+                    { 6, 4, 100 },
+                    { 7, 5, 100 },
+                    { 8, 6, 100 },
+                    { 8, 10, 25 },
+                    { 9, 7, 100 },
+                    { 10, 8, 100 },
+                    { 11, 9, 40 },
+                    { 12, 10, 100 },
+                    { 12, 19, 35 },
+                    { 13, 11, 100 },
+                    { 14, 12, 70 },
+                    { 15, 13, 35 },
+                    { 16, 14, 80 },
+                    { 17, 15, 100 },
+                    { 18, 16, 100 },
+                    { 19, 17, 50 },
+                    { 20, 18, 100 }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FuncionarioDetalhes_FuncionarioId",
+                table: "FuncionarioDetalhes",
+                column: "FuncionarioId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Funcionarios_DepartamentoId",
+                table: "Funcionarios",
+                column: "DepartamentoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FuncionariosProjetos_ProjetoId",
+                table: "FuncionariosProjetos",
+                column: "ProjetoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projetos_ClienteId",
+                table: "Projetos",
+                column: "ClienteId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 1);
+            migrationBuilder.DropTable(
+                name: "FuncionarioDetalhes");
 
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 2);
+            migrationBuilder.DropTable(
+                name: "FuncionariosProjetos");
 
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 3);
+            migrationBuilder.DropTable(
+                name: "Funcionarios");
 
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 4);
+            migrationBuilder.DropTable(
+                name: "Projetos");
 
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 5);
+            migrationBuilder.DropTable(
+                name: "Departamentos");
 
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 6);
-
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 7);
-
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 8);
-
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 9);
-
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 10);
-
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 11);
-
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 12);
-
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 13);
-
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 14);
-
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 15);
-
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 16);
-
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 17);
-
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 18);
-
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 19);
-
-            migrationBuilder.DeleteData(
-                table: "FuncionarioDetalhes",
-                keyColumn: "FuncionarioDetalheId",
-                keyValue: 20);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 1);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 2);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 3);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 4);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 5);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 6);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 7);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 8);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 9);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 10);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 11);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 12);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 13);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 14);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 15);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 16);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 17);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 18);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 19);
-
-            migrationBuilder.DeleteData(
-                table: "Projetos",
-                keyColumn: "ProjetoId",
-                keyValue: 20);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 1);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 2);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 3);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 4);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 5);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 6);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 7);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 8);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 9);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 10);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 11);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 12);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 13);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 14);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 15);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 16);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 17);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 18);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 19);
-
-            migrationBuilder.DeleteData(
-                table: "Clientes",
-                keyColumn: "ClienteId",
-                keyValue: 20);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 1);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 2);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 3);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 4);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 5);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 6);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 7);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 8);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 9);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 10);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 11);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 12);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 13);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 14);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 15);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 16);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 17);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 18);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 19);
-
-            migrationBuilder.DeleteData(
-                table: "Funcionarios",
-                keyColumn: "FuncionarioId",
-                keyValue: 20);
-
-            migrationBuilder.DeleteData(
-                table: "Departamentos",
-                keyColumn: "DepartamentoId",
-                keyValue: 1);
-
-            migrationBuilder.DeleteData(
-                table: "Departamentos",
-                keyColumn: "DepartamentoId",
-                keyValue: 2);
-
-            migrationBuilder.DeleteData(
-                table: "Departamentos",
-                keyColumn: "DepartamentoId",
-                keyValue: 3);
+            migrationBuilder.DropTable(
+                name: "Clientes");
         }
     }
 }

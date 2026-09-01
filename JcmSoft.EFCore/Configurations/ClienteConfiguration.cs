@@ -15,6 +15,11 @@ namespace JcmSoft.EFCore.Configurations
     {
         public void Configure(EntityTypeBuilder<Cliente> entity)
         {
+            entity.HasMany(c => c.Projetos)
+                  .WithOne(p => p.Cliente)
+                  .HasForeignKey(p => p.ClienteId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
             entity.Property(e => e.Nome).HasMaxLength(100).IsRequired();
             entity.Property(e => e.Email).HasMaxLength(200).IsRequired();
             entity.Property(e => e.Telefone).HasMaxLength(50).IsRequired();

@@ -17,6 +17,10 @@ namespace JcmSoft.Domain.Entities
         public DateTime DataAtualizacao { get; set; }
         public DateTime DataFim { get; set; }
         public StatusProjeto Status { get; set; }
+        // propriedade que usará a sequência
+        public int NumeroOrdemServico { get; set; }
+        // coluna calculada
+        public int DuracaoEmDias { get; private set; }
 
         // propriedade de navegação para a relação muitos-para-muitos com funcionario
         public ICollection<FuncionariosProjetos> FuncionarioProjetos { get; set; } = new List<FuncionariosProjetos>();

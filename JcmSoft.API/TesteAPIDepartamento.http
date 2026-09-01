@@ -1,0 +1,22 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+POST https://localhost:7171/api/departamentos/
+Content-Type: application/json
+
+{
+    "Nome":"Departamento da resenha",
+    "Descricao":"Resenhaxx"
+}
+
+###
+
+PUT https://localhost:7171/api/departamentos/4
+Content-Type: application/json
+
+{
+    "DepartamentoId": 4,
+    "Nome":"Departamento da resenha ATUALIZADO",
+    "Descricao":"Resenhaxx AVERIGUADA COM SUCESSO"
+}
+
+### 
+DELETE https://localhost:7171/api/departamentos/4

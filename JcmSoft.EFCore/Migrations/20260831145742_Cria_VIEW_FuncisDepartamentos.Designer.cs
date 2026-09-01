@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JcmSoft.EFCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260827174630_SeedDataMigration")]
-    partial class SeedDataMigration
+    [Migration("20260831145742_Cria_VIEW_FuncisDepartamentos")]
+    partial class Cria_VIEW_FuncisDepartamentos
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -809,6 +809,158 @@ namespace JcmSoft.EFCore.Migrations
                     b.HasIndex("ProjetoId");
 
                     b.ToTable("FuncionariosProjetos");
+
+                    b.HasData(
+                        new
+                        {
+                            FuncionarioId = 1,
+                            ProjetoId = 1,
+                            HorasTrabalhadas = 80
+                        },
+                        new
+                        {
+                            FuncionarioId = 2,
+                            ProjetoId = 1,
+                            HorasTrabalhadas = 60
+                        },
+                        new
+                        {
+                            FuncionarioId = 3,
+                            ProjetoId = 2,
+                            HorasTrabalhadas = 90
+                        },
+                        new
+                        {
+                            FuncionarioId = 4,
+                            ProjetoId = 2,
+                            HorasTrabalhadas = 70
+                        },
+                        new
+                        {
+                            FuncionarioId = 5,
+                            ProjetoId = 3,
+                            HorasTrabalhadas = 100
+                        },
+                        new
+                        {
+                            FuncionarioId = 6,
+                            ProjetoId = 4,
+                            HorasTrabalhadas = 100
+                        },
+                        new
+                        {
+                            FuncionarioId = 7,
+                            ProjetoId = 5,
+                            HorasTrabalhadas = 100
+                        },
+                        new
+                        {
+                            FuncionarioId = 8,
+                            ProjetoId = 6,
+                            HorasTrabalhadas = 100
+                        },
+                        new
+                        {
+                            FuncionarioId = 9,
+                            ProjetoId = 7,
+                            HorasTrabalhadas = 100
+                        },
+                        new
+                        {
+                            FuncionarioId = 10,
+                            ProjetoId = 8,
+                            HorasTrabalhadas = 100
+                        },
+                        new
+                        {
+                            FuncionarioId = 11,
+                            ProjetoId = 9,
+                            HorasTrabalhadas = 40
+                        },
+                        new
+                        {
+                            FuncionarioId = 12,
+                            ProjetoId = 10,
+                            HorasTrabalhadas = 100
+                        },
+                        new
+                        {
+                            FuncionarioId = 13,
+                            ProjetoId = 11,
+                            HorasTrabalhadas = 100
+                        },
+                        new
+                        {
+                            FuncionarioId = 14,
+                            ProjetoId = 12,
+                            HorasTrabalhadas = 70
+                        },
+                        new
+                        {
+                            FuncionarioId = 15,
+                            ProjetoId = 13,
+                            HorasTrabalhadas = 35
+                        },
+                        new
+                        {
+                            FuncionarioId = 16,
+                            ProjetoId = 14,
+                            HorasTrabalhadas = 80
+                        },
+                        new
+                        {
+                            FuncionarioId = 17,
+                            ProjetoId = 15,
+                            HorasTrabalhadas = 100
+                        },
+                        new
+                        {
+                            FuncionarioId = 18,
+                            ProjetoId = 16,
+                            HorasTrabalhadas = 100
+                        },
+                        new
+                        {
+                            FuncionarioId = 19,
+                            ProjetoId = 17,
+                            HorasTrabalhadas = 50
+                        },
+                        new
+                        {
+                            FuncionarioId = 20,
+                            ProjetoId = 18,
+                            HorasTrabalhadas = 100
+                        },
+                        new
+                        {
+                            FuncionarioId = 1,
+                            ProjetoId = 19,
+                            HorasTrabalhadas = 100
+                        },
+                        new
+                        {
+                            FuncionarioId = 3,
+                            ProjetoId = 20,
+                            HorasTrabalhadas = 55
+                        },
+                        new
+                        {
+                            FuncionarioId = 5,
+                            ProjetoId = 4,
+                            HorasTrabalhadas = 30
+                        },
+                        new
+                        {
+                            FuncionarioId = 8,
+                            ProjetoId = 10,
+                            HorasTrabalhadas = 25
+                        },
+                        new
+                        {
+                            FuncionarioId = 12,
+                            ProjetoId = 19,
+                            HorasTrabalhadas = 35
+                        });
                 });
 
             modelBuilder.Entity("JcmSoft.Domain.Entities.Projeto", b =>
@@ -1102,7 +1254,7 @@ namespace JcmSoft.EFCore.Migrations
                     b.HasOne("JcmSoft.Domain.Entities.Departamento", "Departamento")
                         .WithMany("Funcionarios")
                         .HasForeignKey("DepartamentoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Departamento");

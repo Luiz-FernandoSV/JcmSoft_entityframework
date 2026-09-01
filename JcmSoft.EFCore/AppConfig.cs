@@ -10,7 +10,7 @@ namespace JcmSoft.EFCore
     {
         public static string GetConnectionString()
         {
-            return "Data Source=DSV06;Initial Catalog=JcmSoftDatabase;Integrated Security=True;TrustServerCertificate=True;";
+            return "Data Source=DSV06;Initial Catalog=JcmSoftDatabaseTesteFluentApi;Integrated Security=True;TrustServerCertificate=True;";
         }
     }
 }

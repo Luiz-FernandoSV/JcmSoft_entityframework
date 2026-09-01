@@ -13,8 +13,15 @@ namespace JcmSoft.EFCore.Configurations
     {
         public void Configure(EntityTypeBuilder<Departamento> entity)
         {
+            entity.HasMany(d => d.Funcionarios)
+                  .WithOne(f => f.Departamento)
+                  .HasForeignKey(f => f.DepartamentoId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
             entity.Property(d => d.Nome).IsRequired().HasMaxLength(100);
             entity.Property(d => d.Descricao).IsRequired().HasMaxLength(200);
+
+            entity.Property(d => d.RowVersion).IsRowVersion();
 
             entity.HasData(
                 new Departamento

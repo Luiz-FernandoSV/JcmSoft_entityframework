@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="JcmSoft.API/JcmSoft.API.csproj" Id="28ceac70-d0a0-4f45-a08d-ba8d57da8e43" />
   <Project Path="JcmSoft.Console/JcmSoft.Console.csproj" />
   <Project Path="JcmSoft.Domain/JcmSoft.Domain.csproj" />
   <Project Path="JcmSoft.EFCore/JcmSoft.EFCore.csproj" />

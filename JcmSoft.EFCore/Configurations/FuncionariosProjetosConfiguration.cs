@@ -17,6 +17,15 @@ namespace JcmSoft.EFCore.Configurations
         {
 
             entity.HasKey(fp => new { fp.FuncionarioId, fp.ProjetoId });
+
+            entity.HasOne(fp => fp.Funcionario)
+                  .WithMany(f => f.FuncionarioProjetos)
+                  .HasForeignKey(fp => fp.FuncionarioId);
+
+            entity.HasOne(fp => fp.Projeto)
+                  .WithMany(f => f.FuncionarioProjetos)
+                  .HasForeignKey(fp => fp.ProjetoId);
+
             entity.HasData(
                     new FuncionariosProjetos { FuncionarioId = 1, ProjetoId = 1, HorasTrabalhadas = 80 },
                     new FuncionariosProjetos { FuncionarioId = 2, ProjetoId = 1, HorasTrabalhadas = 60 },
